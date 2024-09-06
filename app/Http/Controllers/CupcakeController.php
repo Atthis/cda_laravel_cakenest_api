@@ -13,9 +13,35 @@ class CupcakeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return CupcakeResource::collection(Cupcake::where('is_available', '=', true)->get());
+        $validatedFilters = $request->validate([
+            'flavor'=> 'string|in:sucré,salé,mix',
+            'price'=> 'string|in:asc,desc'
+        ]);
+
+        $user = $request->user();
+        $filters = [];
+
+        if (isset($validatedFilters['flavor'])) {
+            array_push($filters, ['flavor', '=', $validatedFilters['flavor']]);
+        }
+
+        if ($user->is_admin) {
+            if (isset($validatedFilters['price'])) {
+                return CupcakeResource::collection(Cupcake::where($filters)->orderBy('price_in_cents', $validatedFilters['price'])->get());
+            }
+
+            return CupcakeResource::collection(Cupcake::where($filters)->get());
+        } else {
+            array_push($filters, ['is_available', '=', true]);
+
+            if (isset($validatedFilters['price'])) {
+                return CupcakeResource::collection(Cupcake::where($filters)->orderBy('price_in_cents', $validatedFilters['price'])->get());
+            }
+
+            return CupcakeResource::collection(Cupcake::where($filters)->get());
+        }
     }
 
     /**
@@ -27,6 +53,7 @@ class CupcakeController extends Controller
             'name'=> 'required|string|min:2',
             'image'=> 'string',
             'quantity'=> 'numeric',
+            'flavor'=> 'required|string|in:sucré,salé,mix',
             'is_available'=> 'boolean',
             'is_advertised'=> 'boolean',
             'price'=> 'required|numeric|gt:0'
@@ -54,6 +81,7 @@ class CupcakeController extends Controller
             'name'=> 'required|string|min:2',
             'image'=> 'string',
             'quantity'=> 'numeric',
+            'flavor'=> 'string|in:sucré,salé,mix',
             'is_available'=> 'boolean',
             'is_advertised'=> 'boolean',
             'price'=> 'required|numeric|gt:0'

@@ -75,7 +75,7 @@ class PurchaseController extends Controller
             $cupcake_data = Cupcake::findOrFail($cupcake['cupcake_id']);
 
             // Add pivot data to the pivot table
-            $purchase->cupcakes()->attach($cupcake_data->id, ['quantity' => $cupcake['quantity'], 'price' => $cupcake_data->price]);
+            $purchase->cupcakes()->attach($cupcake_data->id, ['quantity' => $cupcake['quantity'], 'price' => $cupcake_data->price_in_cents]);
 
             // Remove purchased quantity from stock
             $cupcake_data->fill(['quantity' => $cupcake_data->quantity - $cupcake['quantity']]);
@@ -83,7 +83,7 @@ class PurchaseController extends Controller
         }
 
         return response(['message'=>'purchase successfully added', 'data'=>
-        new PurchaseResource(Purchase::with(['user', 'cupcakes'])->findOrFail($purchase ->id))], 200);
+        new PurchaseResource($purchase->load(['user', 'cupcakes']))], 200);
     }
 
     /**
@@ -165,7 +165,7 @@ class PurchaseController extends Controller
         }
 
         return response(['message'=>'purchase successfully updated', 'data'=>
-        new PurchaseResource(Purchase::with(['user', 'cupcakes'])->findOrFail($purchase ->id))], 200);
+        new PurchaseResource($purchase->load(['user', 'cupcakes']))], 200);
     }
 
     /**

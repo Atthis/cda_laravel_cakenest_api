@@ -20,6 +20,7 @@ class Cupcake extends Model
         'name',
         'image',
         'quantity',
+        'flavor',
         'is_available',
         'is_advertised',
         'price_in_cents',
@@ -38,9 +39,7 @@ class Cupcake extends Model
     {
         return Attribute::make(
             get: fn (mixed $value, mixed $attributes) => $attributes['price_in_cents'] / 100,
-            set: fn (mixed $value) => [
-                'price_in_cents' => floor($value * 100)
-                ]
+            set: fn (mixed $value) => ['price_in_cents' => floor($value * 100)]
         );
     }
 

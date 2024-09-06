@@ -46,7 +46,7 @@ class DatabaseSeeder extends Seeder
                     $cupcake_id,
                     [
                         'quantity' => rand(1,3),
-                        'price' => Cupcake::find($cupcake_id)->price
+                        'price' => Cupcake::find($cupcake_id)->price_in_cents
                     ]
                 );
             }

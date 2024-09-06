@@ -17,9 +17,12 @@ class CupcakeFactory extends Factory
      */
     public function definition(): array
     {
+        $flavors = ['sucré', 'salé', 'mix'];
+
         return [
             'name' => fake()->colorName(),
             'quantity' => random_int(0, 500),
+            'flavor' => $flavors[random_int(0,2)],
             'is_available' => fake()->boolean(70),
             'is_advertised' => fake()->boolean(20),
             'price_in_cents' => random_int(250, 500)

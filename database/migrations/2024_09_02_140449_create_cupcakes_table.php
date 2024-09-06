@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('image')->nullable();
             $table->integer('quantity')->default(0);
+            $table->string('flavor');
             $table->boolean('is_available')->default(false);
             $table->boolean('is_advertised')->default(false);
             $table->integer('price_in_cents');

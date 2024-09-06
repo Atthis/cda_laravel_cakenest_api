@@ -18,7 +18,7 @@ class PurchasedCupcakeResource extends JsonResource
             'id' => $this->id,
             'imageSource' => $this->image,
             'title' => $this->name,
-            'price' => $this->pivot->price,
+            'price' => $this->pivot->price / 100,
             'quantity' => $this->pivot->quantity,
         ];
     }

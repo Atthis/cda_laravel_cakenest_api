@@ -16,10 +16,19 @@ class PurchaseResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $purchase_total = 0;
+        $cupcakes = PurchasedCupcakeResource::collection($this->whenLoaded('cupcakes'));
+
+        foreach ($cupcakes as $cupcake) {
+            $cupcake_total = floor($cupcake->pivot->price) * $cupcake->pivot->quantity;
+            $purchase_total += $cupcake_total;
+        }
+
         return [
             'id' => $this->id,
             'customer' => new UserResource($this->whenLoaded('user')),
-            'cupcakes' => PurchasedCupcakeResource::collection($this->whenLoaded('cupcakes'))
+            'cupcakes' => $cupcakes,
+            'purchase_total' => $purchase_total / 100
         ];
     }
 }
