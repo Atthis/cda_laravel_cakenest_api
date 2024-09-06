@@ -27,14 +27,6 @@ class Cupcake extends Model
         'price'
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-    ];
-
     protected function price(): Attribute
     {
         return Attribute::make(
