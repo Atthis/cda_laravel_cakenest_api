@@ -33,9 +33,8 @@ class CupcakeController extends Controller
         ]);
 
         $cupcake = Cupcake::create($validatedData);
-        // $cupcake->save();
 
-        return response(['message'=>'cupcake successfully added', 'data'=>$cupcake], 200);
+        return response(['message'=>'cupcake successfully added', 'data'=>$cupcake]);
     }
 
     /**

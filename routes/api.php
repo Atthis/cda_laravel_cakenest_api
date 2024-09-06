@@ -3,6 +3,7 @@
 use App\Http\Controllers\CupcakeController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Middleware\AdminRoutesChecker;
+use App\Models\Purchase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,8 +24,13 @@ Route::middleware(['auth:sanctum'])->group(function() {
 
     // Admin routes
     Route::middleware(AdminRoutesChecker::class)->group(function() {
+        // Cupcake routes
         Route::post('/cupcake', [CupcakeController::class, 'store'])->name('cupcake.create');
         Route::patch('/cupcake/{id}', [CupcakeController::class, 'update'])->name('cupcake.update');
         Route::delete('/cupcake/{id}', [CupcakeController::class, 'destroy'])->name('cupcake.delete');
+
+        // Purchase routes
+        Route::patch('/purchase/{id}', [PurchaseController::class, 'update'])->name('purchase.update');
+        Route::delete('/purchase/{id}', [PurchaseController::class, 'destroy'])->name('purchase.delete');
     });
 });
