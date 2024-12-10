@@ -27,7 +27,7 @@ class CupcakeController extends Controller
             array_push($filters, ['flavor', '=', $validatedFilters['flavor']]);
         }
 
-        if ($user->is_admin) {
+        if (isset($user) && $user->is_admin) {
             if (isset($validatedFilters['price'])) {
                 return CupcakeResource::collection(Cupcake::where($filters)->orderBy('price_in_cents', $validatedFilters['price'])->get());
             }
