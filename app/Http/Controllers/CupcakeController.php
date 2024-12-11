@@ -61,7 +61,7 @@ class CupcakeController extends Controller
 
         $cupcake = Cupcake::create($validatedData);
 
-        return response(['message'=>'cupcake successfully added', 'data'=>$cupcake]);
+        return response(['message'=>'cupcake successfully added', 'data'=> new CupcakeResource($cupcake)]);
     }
 
     /**

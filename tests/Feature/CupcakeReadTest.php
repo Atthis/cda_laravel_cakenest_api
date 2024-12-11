@@ -21,9 +21,9 @@ test('every user, except admin, can see only available cupcakes', function() {
   expect(count($data))
     ->toEqual(count($availableCupcakes));
 
-  // Each cupcake has "isAvailable" to true
+  // Each cupcake has "is_available" to true
   foreach ($data as $cupcake) {
-    expect($cupcake["isAvailable"])
+    expect($cupcake["is_available"])
       ->toEqual(true);
   }
 });
@@ -87,7 +87,7 @@ test('Filters works for each filter', function() {
   expect(count($saltyData))
     ->toEqual(count($saltyCupcakes));
 
-  // Each cupcake has "isAvailable" to true
+  // Each cupcake has "is_available" to true
   foreach ($saltyData as $cupcake) {
     expect($cupcake["flavor"])
       ->toEqual("salé");
