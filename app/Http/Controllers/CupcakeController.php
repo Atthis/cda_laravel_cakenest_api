@@ -96,7 +96,7 @@ class CupcakeController extends Controller
 
         $currentCupcake->save();
 
-        return response(['message'=> 'cupcake successfully updated', 'data' => $currentCupcake]);
+        return response(['message'=> 'cupcake successfully updated', 'data' => new CupcakeResource($currentCupcake)]);
     }
 
     /**
