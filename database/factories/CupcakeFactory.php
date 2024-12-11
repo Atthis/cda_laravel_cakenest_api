@@ -28,4 +28,16 @@ class CupcakeFactory extends Factory
             'price_in_cents' => random_int(250, 500)
       ];
     }
+
+    public function is_available() {
+        return $this->state(fn (array $attributes) => [
+            'is_available' => true,
+        ]);
+    }
+
+    public function is_unavailable() {
+        return $this->state(fn (array $attributes) => [
+            'is_available' => false,
+        ]);
+    }
 }

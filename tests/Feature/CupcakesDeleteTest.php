@@ -32,6 +32,9 @@ test('an admin user can delete a cupcake', function () {
 });
 
 test('a standard user cannot delete a cupcake', function () {
+    /**
+     * @var user
+     */
     $user = User::factory()->create([
         'name' => 'User',
         'email' => 'user@example.com',
