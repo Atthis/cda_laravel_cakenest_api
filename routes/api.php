@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CouponController;
 use App\Http\Controllers\CupcakeController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Middleware\AdminRoutesChecker;
@@ -32,5 +33,8 @@ Route::middleware(['auth:sanctum'])->group(function() {
         // Purchase routes
         Route::patch('/purchase/{id}', [PurchaseController::class, 'update'])->name('purchase.update');
         Route::delete('/purchase/{id}', [PurchaseController::class, 'destroy'])->name('purchase.delete');
+
+        // Coupon routes
+        Route::post('/coupon', [CouponController::class, 'store'])->name('coupon.create');
     });
 });

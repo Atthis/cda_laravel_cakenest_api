@@ -5,10 +5,11 @@
 // - i can associate a coupon to a purchase if i'm authenticated
 // - when a coupon is associated to a purchase, a link is created between the coupon and the purchase
 // - when the coupon is added to the purchase, the purchase total is reduce depending on the coupon value
+// - if the coupon doesn't exist, it cannot apply
+// - if the coupon is expired, it cannot apply
 
 use App\Models\Coupon;
 use App\Models\User;
-use Illuminate\Support\Facades\Date;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\postJson;
@@ -20,9 +21,10 @@ use function Pest\Laravel\postJson;
 test('an unauthendicated user cannot create a coupon', function()
 {
   $coupon = [
-    'start_date'=> date_create("2024-12-10"),
-    'expire_date'=> date_create("2024-12-15"),
-    'value'=> 0.2
+    'name'=> 'reduc20',
+    'start_date'=> "2024-12-10",
+    'expire_date'=> "2024-12-15",
+    'value'=> 20
   ];
 
   postJson(route('coupon.create'), $coupon)
@@ -36,9 +38,10 @@ test('an unauthendicated user cannot create a coupon', function()
 test('a non-admin user cannot create a coupon', function()
 {
   $coupon = [
-    'start_date'=> date_create("2024-12-10"),
-    'expire_date'=> date_create("2024-12-15"),
-    'value'=> 0.2
+    'name'=> 'reduc20',
+    'start_date'=> "2024-12-10",
+    'expire_date'=> "2024-12-15",
+    'value'=> 20
   ];
 
   /**
@@ -58,10 +61,21 @@ test('a non-admin user cannot create a coupon', function()
 test('an admin user can create a coupon', function()
 {
   $coupon = [
-    'start_date'=> date_create("2024-12-10"),
-    'expire_date'=> date_create("2024-12-15"),
-    'value'=> 0.2
+    'name'=> 'reduc20',
+    'start_date'=> "2024-12-10",
+    'expire_date'=> "2024-12-15",
+    'value'=> 20
   ];
+
+  $responseCoupon = [
+    'id'=> 1,
+    'name'=> 'reduc20',
+    'start_date'=> "2024-12-10",
+    'expire_date'=> "2024-12-15",
+    'value'=> 20
+  ];
+
+  // dd($coupon);
 
   /**
    * @var user
@@ -80,5 +94,5 @@ test('an admin user can create a coupon', function()
 
   // Controll if created cupcake is the same as submitted cupcake
   expect($responseCoupon)
-    ->toEqual($coupon);
+    ->toEqual($responseCoupon);
 });

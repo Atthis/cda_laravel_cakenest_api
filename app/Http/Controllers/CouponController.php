@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CouponResource;
 use App\Models\Coupon;
 use Illuminate\Http\Request;
 
@@ -28,7 +29,16 @@ class CouponController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'name'=> 'required|string',
+            'value'=> 'required|numeric|gt:0|lt:100',
+            'start_date'=> 'required|date',
+            'expire_date'=> 'required|date',
+        ]);
+
+        $coupon = Coupon::create($validatedData);
+
+        return response(['message'=>'coupon successfully added', 'data'=> new CouponResource($coupon)]);
     }
 
     /**
