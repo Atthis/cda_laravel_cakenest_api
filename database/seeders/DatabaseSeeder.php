@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Coupon;
 use App\Models\Cupcake;
 use App\Models\Purchase;
 use App\Models\User;
@@ -31,6 +32,8 @@ class DatabaseSeeder extends Seeder
         $users = User::factory()->count(15)->create();
 
         $cupcakes = Cupcake::factory()->count(30)->create();
+
+        $coupons = Coupon::factory()->count(2)->create();
 
         // $purchases = Purchase::factory()->count(5)->create(['user_id' => $users->random(1)->pluck('id')]);
         $purchases = [];
