@@ -30,7 +30,7 @@ class CouponController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'name'=> 'required|string',
+            'code'=> 'required|string',
             'value'=> 'required|numeric|gt:0|lt:100',
             'start_date'=> 'required|date',
             'expire_date'=> 'required|date',

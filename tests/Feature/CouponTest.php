@@ -21,7 +21,7 @@ use function Pest\Laravel\postJson;
 test('an unauthendicated user cannot create a coupon', function()
 {
   $coupon = [
-    'name'=> 'reduc20',
+    'code'=> 'reduc20',
     'start_date'=> "2024-12-10",
     'expire_date'=> "2024-12-15",
     'value'=> 20
@@ -38,7 +38,7 @@ test('an unauthendicated user cannot create a coupon', function()
 test('a non-admin user cannot create a coupon', function()
 {
   $coupon = [
-    'name'=> 'reduc20',
+    'code'=> 'reduc20',
     'start_date'=> "2024-12-10",
     'expire_date'=> "2024-12-15",
     'value'=> 20
@@ -61,7 +61,7 @@ test('a non-admin user cannot create a coupon', function()
 test('an admin user can create a coupon', function()
 {
   $coupon = [
-    'name'=> 'reduc20',
+    'code'=> 'reduc20',
     'start_date'=> "2024-12-10",
     'expire_date'=> "2024-12-15",
     'value'=> 20
@@ -69,7 +69,7 @@ test('an admin user can create a coupon', function()
 
   $responseCoupon = [
     'id'=> 1,
-    'name'=> 'reduc20',
+    'code'=> 'reduc20',
     'start_date'=> "2024-12-10",
     'expire_date'=> "2024-12-15",
     'value'=> 20
@@ -96,3 +96,7 @@ test('an admin user can create a coupon', function()
   expect($responseCoupon)
     ->toEqual($responseCoupon);
 });
+
+// ******************
+// Coupon Creation tests
+// ******************
