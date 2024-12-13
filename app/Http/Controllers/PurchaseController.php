@@ -34,10 +34,11 @@ class PurchaseController extends Controller
     {
         // validate front data
         $validatedData = $request->validate([
-            'user_id'=> 'numeric|exists:users,id',
+            'user_id'=> 'required|numeric|exists:users,id',
             'cupcakes'=> 'required|array',
             'cupcakes.*.cupcake_id'=> 'required|exists:cupcakes,id',
-            'cupcakes.*.quantity'=> 'required|numeric|min:1'
+            'cupcakes.*.quantity'=> 'required|numeric|min:1',
+            'coupon_id'=> 'numeric|exists:coupons,id'
         ]);
 
         // Check for cupcake stocks
@@ -66,6 +67,10 @@ class PurchaseController extends Controller
         $purchase = new Purchase([
             'user_id' => isset($validatedData['user_id']) ? $validatedData['user_id'] : $request->user()->id
         ]);
+
+        if (isset($validatedData['coupon_id'])) {
+            $purchase->coupon_id = $validatedData['coupon_id'];
+        }
 
         // save purchase into db
         $purchase->save();

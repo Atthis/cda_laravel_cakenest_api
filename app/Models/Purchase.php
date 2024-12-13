@@ -18,6 +18,7 @@ class Purchase extends Model
     protected $fillable = [
         'id',
         'user_id',
+        'coupon_id'
     ];
 
     public function user()
@@ -28,5 +29,10 @@ class Purchase extends Model
     public function cupcakes()
     {
         return $this->belongsToMany(Cupcake::class)->withPivot(['quantity', 'price']);
+    }
+
+    public function coupon()
+    {
+        return $this->hasOne(Coupon::class);
     }
 }

@@ -28,7 +28,8 @@ class PurchaseResource extends JsonResource
             'id' => $this->id,
             'customer' => new UserResource($this->whenLoaded('user')),
             'cupcakes' => $cupcakes,
-            'purchase_total' => $purchase_total / 100
+            'purchase_total' => $purchase_total / 100,
+            'coupon_id'=> $this->coupon_id
         ];
     }
 }

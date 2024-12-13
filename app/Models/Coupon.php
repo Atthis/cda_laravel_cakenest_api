@@ -15,4 +15,9 @@ class Coupon extends Model
         'start_date',
         'expire_date'
     ];
+
+    public function purchases()
+    {
+        return $this->belongsToMany(Purchase::class);
+    }
 }

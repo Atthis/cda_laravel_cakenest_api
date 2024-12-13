@@ -141,12 +141,16 @@ test('an authenticated user can send a purchase with a coupon', function()
 {
   ['user' => $user, 'purchase'=> $purchase] = createPurchaseWithCoupon();
 
+
   ['data'=> $dbPurchase] = actingAs($user)
-    ->postJson(route('purchase.create'), $purchase)
-    ->assertCreated();
+  ->postJson(route('purchase.create'), $purchase)
+  ->assertCreated();
+
   // test if purchase has been created
   expect(Purchase::count())
     ->toEqual(1);
+
+  // dd($dbPurchase);
 
   // test if purchase has a coupon associated to it
   expect($dbPurchase['coupon_id'])
