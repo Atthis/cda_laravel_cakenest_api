@@ -94,7 +94,7 @@ test('an admin user can create a cupcake', function()
     ->toEqual($cupcakeResponse);
 });
 
-test('invalid form data shouldn\'t be submitted', function()
+test("invalid form data shouldn't be submitted", function()
 {
   $cupcakeWithEmptyName = [
     'name'=> null,

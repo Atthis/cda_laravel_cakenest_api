@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\CupcakeResource;
 use App\Http\Resources\PurchaseResource;
+use App\Models\Coupon;
 use App\Models\Cupcake;
 use App\Models\Purchase;
+use Carbon\Carbon;
+use Illuminate\Contracts\Support\ValidatedData;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -60,7 +63,24 @@ class PurchaseController extends Controller
 
         // if some cupcakes have higher requested quantity than stock
         if (!empty($out_of_stock_cupcakes)) {
-            return response(['message' => 'out of stock cupcakes inside the purchase.', 'outOfStockCupcakes' => $out_of_stock_cupcakes], 422);
+            return response([
+                'message' => 'out of stock cupcakes inside the purchase.',
+                'data'=>[
+                    'outOfStockCupcakes' => $out_of_stock_cupcakes
+                ]
+            ], 422);
+        }
+
+        $coupon = Coupon::find($validatedData['coupon_id']);
+        $couponExpireDate = new Carbon($coupon->expire_date);
+
+        if ($couponExpireDate->lt(Carbon::now()))
+        {
+            return response([
+                'message'=>'your coupon can\'t be applied because it\'s expired.',
+                'data'=> [
+                    'coupon'=> $coupon
+                ]], 422);
         }
 
         // create new purchase with validated data

@@ -28,9 +28,7 @@ function createPurchaseWithCoupon($is_expired = false)
   if ($is_expired) {
     $coupon = Coupon::factory()->expired()->create();
   } else {
-    $coupon = Coupon::factory()->create([
-      'value'=> 40
-    ]);
+    $coupon = Coupon::factory()->create();
   }
   $purchase = [
     'user_id'=> $user->id,
@@ -174,7 +172,7 @@ test('the purchase total is reduce by the coupon amount', function()
   foreach ($purchaseCupcakes as $cupcake) {
     $cupcake_total = floor($cupcake->pivot->price) * $cupcake->pivot->quantity;
     $totalPurchaseWithoutCoupon += $cupcake_total;
-}
+  }
 
   $couponValue = Coupon::find(Purchase::find($dbPurchase['id'])->coupon_id)->value;
   $totalPurchaseWithCoupon = ($totalPurchaseWithoutCoupon - floor($totalPurchaseWithoutCoupon * $couponValue / 100)) / 100;
@@ -183,12 +181,12 @@ test('the purchase total is reduce by the coupon amount', function()
    ->toEqual($totalPurchaseWithCoupon);
 });
 
-test('the coupon can\'t be applied if it\'s expired', function()
+test("the coupon can't be applied if it's expired", function()
 {
   ['user' => $user, 'purchase'=> $purchase] = createPurchaseWithCoupon(true);
 
   // user send the purchase
-  ['data'=> $responseData] = actingAs($user)
+  $responseData = actingAs($user)
   ->postJson(route('purchase.create'), $purchase);
 
   // the purchase must not be saved because the coupon is expired
