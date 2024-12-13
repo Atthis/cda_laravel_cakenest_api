@@ -6,6 +6,7 @@
 // - when the coupon is added to the purchase, the purchase total is reduce depending on the coupon value -> see the purchase resource for total calculation
 // - if the coupon is expired, it cannot apply
 
+use App\Http\Resources\PurchaseResource;
 use App\Models\Coupon;
 use App\Models\Cupcake;
 use App\Models\Purchase;
@@ -27,7 +28,9 @@ function createPurchaseWithCoupon($is_expired = false)
   if ($is_expired) {
     $coupon = Coupon::factory()->expired()->create();
   } else {
-    $coupon = Coupon::factory()->create();
+    $coupon = Coupon::factory()->create([
+      'value'=> 40
+    ]);
   }
   $purchase = [
     'user_id'=> $user->id,
@@ -141,7 +144,6 @@ test('an authenticated user can send a purchase with a coupon', function()
 {
   ['user' => $user, 'purchase'=> $purchase] = createPurchaseWithCoupon();
 
-
   ['data'=> $dbPurchase] = actingAs($user)
   ->postJson(route('purchase.create'), $purchase)
   ->assertCreated();
@@ -150,10 +152,11 @@ test('an authenticated user can send a purchase with a coupon', function()
   expect(Purchase::count())
     ->toEqual(1);
 
-  // dd($dbPurchase);
+  $storedPurchase = new PurchaseResource(Purchase::with(['user', 'cupcakes'])->find($dbPurchase['id']));
+  $storedFormatedPurchase = $storedPurchase->resolve();
 
   // test if purchase has a coupon associated to it
-  expect($dbPurchase['coupon_id'])
+  expect($storedFormatedPurchase['coupon']['id'])
     ->toEqual(1);
 });
 
@@ -176,7 +179,7 @@ test('the purchase total is reduce by the coupon amount', function()
   $couponValue = Coupon::find(Purchase::find($dbPurchase['id'])->coupon_id)->value;
   $totalPurchaseWithCoupon = ($totalPurchaseWithoutCoupon - floor($totalPurchaseWithoutCoupon * $couponValue / 100)) / 100;
 
-  expect($dbPurchase['purchase_total'])
+  expect($dbPurchase['purchase_total_with_coupon'])
    ->toEqual($totalPurchaseWithCoupon);
 });
 
