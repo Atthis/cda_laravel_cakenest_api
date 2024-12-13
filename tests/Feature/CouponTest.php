@@ -24,7 +24,9 @@ function createPurchaseWithCoupon($is_expired = false)
    * @var user
    */
   $user = User::factory()->create();
-  $cupcakes = Cupcake::factory()->count(3)->create();
+  $cupcakes = Cupcake::factory()->count(3)->create([
+    'quantity'=> 10
+  ]);
   if ($is_expired) {
     $coupon = Coupon::factory()->expired()->create();
   } else {
@@ -175,7 +177,7 @@ test('the purchase total is reduce by the coupon amount', function()
   }
 
   $couponValue = Coupon::find(Purchase::find($dbPurchase['id'])->coupon_id)->value;
-  $totalPurchaseWithCoupon = ($totalPurchaseWithoutCoupon - floor($totalPurchaseWithoutCoupon * $couponValue / 100)) / 100;
+  $totalPurchaseWithCoupon = round($totalPurchaseWithoutCoupon - $totalPurchaseWithoutCoupon * $couponValue / 100) / 100;
 
   expect($dbPurchase['purchase_total_with_coupon'])
    ->toEqual($totalPurchaseWithCoupon);
