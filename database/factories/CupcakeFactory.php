@@ -21,7 +21,7 @@ class CupcakeFactory extends Factory
 
         return [
             'name' => fake()->colorName(),
-            'quantity' => random_int(0, 500),
+            'quantity' => random_int(0, 100),
             'flavor' => $flavors[random_int(0,2)],
             'is_available' => fake()->boolean(70),
             'is_advertised' => fake()->boolean(20),

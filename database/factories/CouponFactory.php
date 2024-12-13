@@ -19,8 +19,8 @@ class CouponFactory extends Factory
     {
         $couponValue = random_int(1, 8) * 10;
         $carbonDate = Carbon::now();
-        $startDate = $carbonDate->isoFormat('YYYY-MM-DDThh:mm:ss');
-        $expireDate = $carbonDate->addDays(5)->isoFormat('YYYY-MM-DDThh:mm:ss');
+        $startDate = $carbonDate;
+        $expireDate = $carbonDate->addDays(5);
 
         return [
             'value'=> $couponValue,
@@ -28,5 +28,11 @@ class CouponFactory extends Factory
             'start_date'=> $startDate,
             'expire_date'=> $expireDate,
         ];
+    }
+
+    public function expired() {
+        return $this->state(fn (array $attributes) => [
+            'expire_date' => Carbon::yesterday(),
+        ]);
     }
 }

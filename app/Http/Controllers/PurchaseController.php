@@ -59,7 +59,7 @@ class PurchaseController extends Controller
 
         // if some cupcakes have higher requested quantity than stock
         if (!empty($out_of_stock_cupcakes)) {
-            return response(['message' => 'out of stock cupcakes inside the purchase.', 'outOfStockCupcakes' => $out_of_stock_cupcakes]);
+            return response(['message' => 'out of stock cupcakes inside the purchase.', 'outOfStockCupcakes' => $out_of_stock_cupcakes], 422);
         }
 
         // create new purchase with validated data
@@ -83,7 +83,7 @@ class PurchaseController extends Controller
         }
 
         return response(['message'=>'purchase successfully added', 'data'=>
-        new PurchaseResource($purchase->load(['user', 'cupcakes']))], 200);
+        new PurchaseResource($purchase->load(['user', 'cupcakes']))], 201);
     }
 
     /**
