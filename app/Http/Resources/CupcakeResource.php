@@ -21,8 +21,8 @@ class CupcakeResource extends JsonResource
             'price' => $this->price_in_cents / 100,
             'quantity' => $this->quantity,
             'flavor' => $this->flavor,
-            'isAvailable' => $this->is_available,
-            'isAsvertised' => $this->is_advertised,
+            'is_available' => $this->is_available,
+            'is_advertised' => $this->is_advertised,
         ];
     }
 }

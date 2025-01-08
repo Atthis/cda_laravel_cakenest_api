@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('purchases', function (Blueprint $table) {
+        Schema::create('coupons', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('user_id');
-            $table->foreignId('coupon_id')->nullable();
-       });
+            $table->string('code')->unique();
+            $table->integer('value');
+            $table->date('start_date');
+            $table->date('expire_date');
+        });
     }
 
     /**
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('purchases');
+        Schema::dropIfExists('coupons');
     }
 };

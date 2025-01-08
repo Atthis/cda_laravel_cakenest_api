@@ -27,7 +27,7 @@ class CupcakeController extends Controller
             array_push($filters, ['flavor', '=', $validatedFilters['flavor']]);
         }
 
-        if ($user->is_admin) {
+        if (isset($user) && $user->is_admin) {
             if (isset($validatedFilters['price'])) {
                 return CupcakeResource::collection(Cupcake::where($filters)->orderBy('price_in_cents', $validatedFilters['price'])->get());
             }
@@ -61,7 +61,7 @@ class CupcakeController extends Controller
 
         $cupcake = Cupcake::create($validatedData);
 
-        return response(['message'=>'cupcake successfully added', 'data'=>$cupcake]);
+        return response(['message'=>'cupcake successfully added', 'data'=> new CupcakeResource($cupcake)]);
     }
 
     /**
@@ -96,7 +96,7 @@ class CupcakeController extends Controller
 
         $currentCupcake->save();
 
-        return response(['message'=> 'cupcake successfully updated', 'data' => $currentCupcake]);
+        return response(['message'=> 'cupcake successfully updated', 'data' => new CupcakeResource($currentCupcake)]);
     }
 
     /**

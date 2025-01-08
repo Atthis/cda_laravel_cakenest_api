@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\CupcakeResource;
 use App\Http\Resources\PurchaseResource;
+use App\Models\Coupon;
 use App\Models\Cupcake;
 use App\Models\Purchase;
+use Carbon\Carbon;
+use Illuminate\Contracts\Support\ValidatedData;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -34,10 +37,11 @@ class PurchaseController extends Controller
     {
         // validate front data
         $validatedData = $request->validate([
-            'user_id'=> 'numeric|exists:users,id',
+            'user_id'=> 'required|numeric|exists:users,id',
             'cupcakes'=> 'required|array',
             'cupcakes.*.cupcake_id'=> 'required|exists:cupcakes,id',
-            'cupcakes.*.quantity'=> 'required|numeric|min:1'
+            'cupcakes.*.quantity'=> 'required|numeric|min:1',
+            'coupon_id'=> 'numeric|exists:coupons,id'
         ]);
 
         // Check for cupcake stocks
@@ -59,13 +63,34 @@ class PurchaseController extends Controller
 
         // if some cupcakes have higher requested quantity than stock
         if (!empty($out_of_stock_cupcakes)) {
-            return response(['message' => 'out of stock cupcakes inside the purchase.', 'outOfStockCupcakes' => $out_of_stock_cupcakes]);
+            return response([
+                'message' => 'out of stock cupcakes inside the purchase.',
+                'data'=>[
+                    'outOfStockCupcakes' => $out_of_stock_cupcakes
+                ]
+            ], 422);
+        }
+
+        $coupon = Coupon::find($validatedData['coupon_id']);
+        $couponExpireDate = new Carbon($coupon->expire_date);
+
+        if ($couponExpireDate->lt(Carbon::now()))
+        {
+            return response([
+                'message'=>'your coupon can\'t be applied because it\'s expired.',
+                'data'=> [
+                    'coupon'=> $coupon
+                ]], 422);
         }
 
         // create new purchase with validated data
         $purchase = new Purchase([
             'user_id' => isset($validatedData['user_id']) ? $validatedData['user_id'] : $request->user()->id
         ]);
+
+        if (isset($validatedData['coupon_id'])) {
+            $purchase->coupon_id = $validatedData['coupon_id'];
+        }
 
         // save purchase into db
         $purchase->save();
@@ -83,7 +108,7 @@ class PurchaseController extends Controller
         }
 
         return response(['message'=>'purchase successfully added', 'data'=>
-        new PurchaseResource($purchase->load(['user', 'cupcakes']))], 200);
+        new PurchaseResource($purchase->load(['user', 'cupcakes']))], 201);
     }
 
     /**
