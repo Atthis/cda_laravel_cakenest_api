@@ -24,7 +24,7 @@ class PurchaseResource extends JsonResource
             $purchase_total += $cupcake_total;
         }
 
-        $purchase_total_with_coupon = floor($purchase_total * (1 - $coupon->value / 100)) / 100;
+        $purchase_total_with_coupon = round($purchase_total * (1 - $coupon->value / 100)) / 100;
 
         return [
             'id' => $this->id,
