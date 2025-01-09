@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('cupcake_purchase', function (Blueprint $table) {
-            $table->foreignId('cupcake_id')->onUpdate('cascade')->onDelete('null');
-            $table->foreignId('purchase_id')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('cupcake_id')->cascadeOnUpdate()->nullOnDelete();
+            $table->foreignId('purchase_id')->cascadeOnUpdate()->cascadeOnDelete();
             $table->integer('quantity');
             $table->integer('price');
         });
